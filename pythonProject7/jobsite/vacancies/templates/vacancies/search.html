@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Поиск вакансий</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'vacancies/css/styles.css' %}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Поиск вакансий</h1>
+        <form method="get">
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <label class="sr-only" for="searchInput">Поиск</label>
+                    <input type="text" class="form-control mb-2" id="searchInput" name="title" placeholder="Введите название вакансии">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-2">Поиск</button>
+                </div>
+            </div>
+        </form>
+
+        <h2>Результаты</h2>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Название вакансии</th>
+                    <th scope="col">Зарплата</th>
+                    <th scope="col">Имя компании</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vacancy in vacancies %}
+                    <tr>
+                        <td><a href="{{ vacancy.url }}">{{ vacancy.title }}</a></td>
+                        <td>{{ vacancy.salary }}</td>
+                        <td>{{ vacancy.company_name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <nav aria-label="Навигация страниц">
+            <ul class="pagination justify-content-center">
+                {% if vacancies.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?title={{ search_query }}&page=1" aria-label="Первая страница">&laquo;</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?title={{ search_query }}&page={{ vacancies.previous_page_number }}" aria-label="Предыдущая страница">Предыдущая</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">&laquo;</span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">Предыдущая</span>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">Страница {{ vacancies.number }} из {{ vacancies.paginator.num_pages }}</span>
+                </li>
+
+                {% if vacancies.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?title={{ search_query }}&page={{ vacancies.next_page_number }}" aria-label="Следующая страница">Следующая</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?title={{ search_query }}&page={{ vacancies.paginator.num_pages }}" aria-label="Последняя страница">&raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">Следующая</span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">&raquo;</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
